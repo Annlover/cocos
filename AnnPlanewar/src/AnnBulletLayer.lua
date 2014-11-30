@@ -13,6 +13,7 @@ end
 local num = 0
 local winSize
 myBullets = {}
+enemyBullets = {}
 
 local random
 math.randomseed(os.time())
@@ -47,13 +48,18 @@ function AnnBulletLayer:init()
                     local bulletRect = cc.rect(bullet_rect_x, bullet_rect_y, bullet_width, bullet_height)
                     if cc.rectIntersectsRect(enemyRect,bulletRect) then
                         enemy:loseLife()
+                        score = score + 10
                         if enemy:getLife() == 0 then
                             local x,y = enemy:getPosition()
                             enemy:removeFromParent()
                             table.remove(enemys,enemyKey)
+                            score = score + 500
+                            local bomb = require("SpriteBomb"):create(2)
+                            bomb:setPosition(x,y)
+                            itemLayer:addChild(bomb)
                             random = math.random(1,4)
                             for num = 1, random do
-                                local star = require("SpriteStar").create()
+                                local star = require("SpriteStar"):create()
                                 star:setPosition(x,y)
                                 itemLayer:addChild(star)
                                 table.insert(items,table.maxn(items) + 1,star)
@@ -64,6 +70,35 @@ function AnnBulletLayer:init()
                         break
                     end
                 end 
+            end
+        end
+        
+        for bulletKey, bulletVar in pairs(enemyBullets) do 
+            local bullet = enemyBullets[bulletKey]
+            if bullet:getPositionY() < 0 or bullet:getPositionX() < 0 or bullet:getPositionX() > winSize.height then
+                bullet:removeFromParent()
+                table.remove(enemyBullets,bulletKey)
+            else
+                local myPlane_width = planeLayer:getContentSize().width
+                local myPlane_height = planeLayer:getContentSize().height
+                local myPlane_rect_x = planeLayer:getPositionX() - myPlane_width / 2
+                local myPlane_rect_y = planeLayer:getPositionY() - myPlane_height / 2
+                local myPlaneRect = cc.rect(myPlane_rect_x, myPlane_rect_y, myPlane_width, myPlane_height)
+
+                local bullet_width = bullet:getContentSize().width
+                local bullet_height = bullet:getContentSize().height
+                local bullet_rect_x = bullet:getPositionX() - bullet_width / 2
+                local bullet_rect_y = bullet:getPositionY() - bullet_height / 2
+                local bulletRect = cc.rect(bullet_rect_x, bullet_rect_y, bullet_width, bullet_height)
+                if cc.rectIntersectsRect(myPlaneRect,bulletRect) then
+                    print("主战机被击中")
+                    bullet:removeFromParent()
+                    table.remove(enemyBullets,bulletKey)
+                    local bomb = require("SpriteBomb"):create(4)
+                    bomb:setPosition(0,0)
+                    planeLayer:addChild(bomb)
+                    break
+                end
             end
         end
     end
