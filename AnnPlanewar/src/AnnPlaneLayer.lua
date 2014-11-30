@@ -9,10 +9,13 @@ function AnnPlaneLayer:create()
 end
 
 function AnnPlaneLayer:init()
+    --添加素材列表
     cc.SpriteFrameCache:getInstance():addSpriteFrames("pig.plist")
     cc.SpriteFrameCache:getInstance():addSpriteFrames("bullet.plist")
-    cc.SpriteFrameCache:getInstance():addSpriteFrames("wsparticle_p01.plist")
     cc.SpriteFrameCache:getInstance():addSpriteFrames("nplane.plist")
+    cc.SpriteFrameCache:getInstance():addSpriteFrames("stars.plist")
+    cc.SpriteFrameCache:getInstance():addSpriteFrames("bomb.plist")
+    cc.SpriteFrameCache:getInstance():addSpriteFrames("img_ui.plist")
     self:addChild(require("SpritePig").create())
     self:f_createSprite()
     return true
