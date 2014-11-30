@@ -12,7 +12,6 @@ local randomX,randomY
 math.randomseed(os.time())
 
 function SpriteStar:init()
-    cc.SpriteFrameCache:getInstance():addSpriteFrames("stars.plist")
     local winSize = cc.Director:getInstance():getWinSize()
     self:setSpriteFrame(cc.SpriteFrameCache:getInstance():getSpriteFrame("stars_01.png"))
     self:setPosition(cc.p(70, 50))
